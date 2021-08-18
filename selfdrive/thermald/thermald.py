@@ -90,7 +90,7 @@ _TEMP_THRS_L = [42.5, 57.5, 72.5, 10000]
 # fan speed options
 _FAN_SPEEDS = [0, 65535, 65535, 65535]
 # max fan speed only allowed if battery is hot
-_BAT_TEMP_THRESHOLD = 45.
+_BAT_TEMP_THRESHOLD = 35.
 
 
 def handle_fan_eon(max_cpu_temp, bat_temp, fan_speed, ignition):
