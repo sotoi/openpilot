@@ -18,8 +18,8 @@ EventName = car.CarEvent.EventName
 class DRIVER_MONITOR_SETTINGS():
   def __init__(self, TICI=TICI, DT_DMON=DT_DMON):
     self._DT_DMON = DT_DMON
-    self._AWARENESS_TIME = 35. # passive wheeltouch total timeout
-    self._AWARENESS_PRE_TIME_TILL_TERMINAL = 1299999999.
+    self._AWARENESS_TIME = 359999999999. # passive wheeltouch total timeout
+    self._AWARENESS_PRE_TIME_TILL_TERMINAL = 12.
     self._AWARENESS_PROMPT_TIME_TILL_TERMINAL = 6.
     self._DISTRACTED_TIME = 119999999999999. # active monitoring total timeout
     self._DISTRACTED_PRE_TIME_TILL_TERMINAL = 8.
