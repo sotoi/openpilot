@@ -346,21 +346,22 @@ class CarInterface(CarInterfaceBase):
         stock_cp.steerAtStandstill = True
         stock_cp.lateralParams.torqueBP, stock_cp.lateralParams.torqueV = [[0, 4096], [0, 4096]]
 
-        # Shape anchored on the C020+Linear55 tune that's empirically stable on a C020 base.
-        # C120+Linear55 has uniformly higher effective rack gain: the routine consuming the
-        # linearized lookup at 0x00F0CD-0x00F1CD is rewritten between C020 and C120 firmwares
-        # (Linear55 only touches the data table at 0x00F8D5, not the consumer). A uniform 20%
-        # scale on kp/ki compensates for the constant gain offset that the code rewrite creates.
+        # DIAGNOSTIC PROBE: 50% of the working C020 baseline.
+        # Not a tune — used to test whether PID gain is the lever for ping-pong.
+        # Expected: feel will be noticeably sluggish. The question is whether the twitch
+        # itself reduces. If it does, PID gain is the source and we walk back up to find
+        # the right cut. If twitch is unchanged at 50% cut, the source is downstream:
+        # torque LPF in carcontroller.py, _pid_output_scale, or steerActuatorDelay.
 
         # mph:                                   0      5      10     15     20     25     30     45     50     80
         # C020 baseline:                        [0.045, 0.050, 0.055, 0.060, 0.080, 0.090, 0.120, 0.120, 0.130, 0.130]
         stock_cp.lateralTuning.pid.kpBP = [0.000, 2.235, 4.470, 6.706, 8.941, 11.176, 13.411, 20.117, 22.352, 35.763]
-        stock_cp.lateralTuning.pid.kpV  = [0.036, 0.040, 0.044, 0.048, 0.064, 0.072, 0.096, 0.096, 0.104, 0.104]
+        stock_cp.lateralTuning.pid.kpV  = [0.023, 0.025, 0.028, 0.030, 0.040, 0.045, 0.060, 0.060, 0.065, 0.065]
 
         # mph:                                   0      5      10     15     20     25     30     35     40     45     50     80
         # C020 baseline:                        [0.000, 0.005, 0.012, 0.020, 0.025, 0.031, 0.035, 0.038, 0.041, 0.045, 0.047, 0.047]
         stock_cp.lateralTuning.pid.kiBP = [0.000, 2.235, 4.470, 6.706, 8.941, 11.176, 13.411, 15.646, 17.882, 20.117, 22.352, 35.763]
-        stock_cp.lateralTuning.pid.kiV  = [0.000, 0.004, 0.010, 0.016, 0.020, 0.025, 0.028, 0.030, 0.033, 0.036, 0.038, 0.038]
+        stock_cp.lateralTuning.pid.kiV  = [0.000, 0.003, 0.006, 0.010, 0.013, 0.016, 0.018, 0.019, 0.021, 0.023, 0.024, 0.024]
 
         stock_cp.lateralTuning.pid.kf = 0.000024
 
