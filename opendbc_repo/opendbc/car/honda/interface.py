@@ -344,17 +344,19 @@ class CarInterface(CarInterfaceBase):
         stock_cp.minEnableSpeed = -1.0
         stock_cp.minSteerSpeed = -1.0
         stock_cp.steerAtStandstill = True
+        stock_cp.steerActuatorDelay = 0.16
         stock_cp.lateralParams.torqueBP, stock_cp.lateralParams.torqueV = [[0, 4096], [0, 4096]]
 
-        # mph:                                  0      5      10     15     20     25     30     45     50     80
+        # Linear55 EPS mod collapses Honda's speed-scheduled assist. PID must roll off at high speed.
+        # mph:                                   0      5      10     15     20     25     30     45     50     80
         stock_cp.lateralTuning.pid.kpBP = [0.000, 2.235, 4.470, 6.706, 8.941, 11.176, 13.411, 20.117, 22.352, 35.763]
-        stock_cp.lateralTuning.pid.kpV  = [0.045, 0.050, 0.055, 0.060, 0.080, 0.090, 0.120, 0.120, 0.130, 0.130]
+        stock_cp.lateralTuning.pid.kpV  = [0.035, 0.045, 0.055, 0.065, 0.085, 0.105, 0.115, 0.115, 0.105, 0.085]
 
-        # mph:                                  0      5      10     15     20     25     30     35     40     45     50     80
+        # mph:                                   0      5      10     15     20     25     30     35     40     45     50     80
         stock_cp.lateralTuning.pid.kiBP = [0.000, 2.235, 4.470, 6.706, 8.941, 11.176, 13.411, 15.646, 17.882, 20.117, 22.352, 35.763]
-        stock_cp.lateralTuning.pid.kiV  = [0.000, 0.005, 0.012, 0.020, 0.025, 0.031, 0.035, 0.038, 0.041, 0.045, 0.047, 0.047]
+        stock_cp.lateralTuning.pid.kiV  = [0.000, 0.005, 0.010, 0.015, 0.020, 0.025, 0.030, 0.032, 0.033, 0.034, 0.035, 0.025]
 
-        stock_cp.lateralTuning.pid.kf = 0.000024
+        stock_cp.lateralTuning.pid.kf = 0.00004
 
     elif candidate == CAR.HONDA_CIVIC_2022:
       if ret.flags & HondaFlagsSP.EPS_MODIFIED:
