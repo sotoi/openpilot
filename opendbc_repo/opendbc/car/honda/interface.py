@@ -365,7 +365,7 @@ class CarInterface(CarInterfaceBase):
         stock_cp.lateralTuning.pid.kiBP = [0.000, 2.235, 4.470, 6.706, 8.941, 11.176, 13.411, 15.646, 17.882, 20.117, 22.352, 35.763]
         stock_cp.lateralTuning.pid.kiV  = [0.000, 0.004, 0.010, 0.016, 0.020, 0.025, 0.028, 0.030, 0.033, 0.036, 0.038, 0.038]
 
-        stock_cp.lateralTuning.pid.kf = 0.0   # was 0.000024 — probe: is feedforward driving the twitch?
+        stock_cp.lateralTuning.pid.kf = 0.000006   # was 0.000024 — quarter strength, drivable for long test
 
     elif candidate == CAR.HONDA_CIVIC_2022:
       if ret.flags & HondaFlagsSP.EPS_MODIFIED:
