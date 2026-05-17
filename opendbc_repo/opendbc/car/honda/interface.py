@@ -346,24 +346,26 @@ class CarInterface(CarInterfaceBase):
         stock_cp.steerAtStandstill = True
         stock_cp.lateralParams.torqueBP, stock_cp.lateralParams.torqueV = [[0, 4096], [0, 4096]]
 
-        # DIAGNOSTIC PROBE: 50% of the working C020 baseline.
-        # Not a tune — used to test whether PID gain is the lever for ping-pong.
-        # Expected: feel will be noticeably sluggish. The question is whether the twitch
-        # itself reduces. If it does, PID gain is the source and we walk back up to find
-        # the right cut. If twitch is unchanged at 50% cut, the source is downstream:
-        # torque LPF in carcontroller.py, _pid_output_scale, or steerActuatorDelay.
+        # v3: v2's kp/ki (×0.80 of C020 baseline) + kf zeroed as a probe.
+        # Theory: kf is feedforward proportional to desired_angle. If the lateral planner
+        # sends an oscillating desired curvature, kf tracks it independent of PID gains.
+        # Reducing kp by 50% in the previous probe produced no perceptible change, which
+        # is consistent with kf — not PID — driving the twitch.
+        # If kf=0 kills the twitch, walk back up to find the largest kf that stays clean.
+        # If twitch persists with kf=0, source is downstream of PID output:
+        # _pid_output_scale or the torque LPF in carcontroller.py.
 
         # mph:                                   0      5      10     15     20     25     30     45     50     80
         # C020 baseline:                        [0.045, 0.050, 0.055, 0.060, 0.080, 0.090, 0.120, 0.120, 0.130, 0.130]
         stock_cp.lateralTuning.pid.kpBP = [0.000, 2.235, 4.470, 6.706, 8.941, 11.176, 13.411, 20.117, 22.352, 35.763]
-        stock_cp.lateralTuning.pid.kpV  = [0.023, 0.025, 0.028, 0.030, 0.040, 0.045, 0.060, 0.060, 0.065, 0.065]
+        stock_cp.lateralTuning.pid.kpV  = [0.036, 0.040, 0.044, 0.048, 0.064, 0.072, 0.096, 0.096, 0.104, 0.104]
 
         # mph:                                   0      5      10     15     20     25     30     35     40     45     50     80
         # C020 baseline:                        [0.000, 0.005, 0.012, 0.020, 0.025, 0.031, 0.035, 0.038, 0.041, 0.045, 0.047, 0.047]
         stock_cp.lateralTuning.pid.kiBP = [0.000, 2.235, 4.470, 6.706, 8.941, 11.176, 13.411, 15.646, 17.882, 20.117, 22.352, 35.763]
-        stock_cp.lateralTuning.pid.kiV  = [0.000, 0.003, 0.006, 0.010, 0.013, 0.016, 0.018, 0.019, 0.021, 0.023, 0.024, 0.024]
+        stock_cp.lateralTuning.pid.kiV  = [0.000, 0.004, 0.010, 0.016, 0.020, 0.025, 0.028, 0.030, 0.033, 0.036, 0.038, 0.038]
 
-        stock_cp.lateralTuning.pid.kf = 0.000024
+        stock_cp.lateralTuning.pid.kf = 0.0   # was 0.000024 — probe: is feedforward driving the twitch?
 
     elif candidate == CAR.HONDA_CIVIC_2022:
       if ret.flags & HondaFlagsSP.EPS_MODIFIED:
